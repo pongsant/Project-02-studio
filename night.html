@@ -3,25 +3,30 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>WSP — Night</title>
+  <title>Nighttime Activities — WSP</title>
   <link rel="stylesheet" href="style.css" />
 </head>
-<body class="night">
-  <header class="bar">
-    <a href="index.html" class="back">← Back</a>
-    <h2>Night — locals, skate lines, live music, smoke</h2>
+<body class="nightpage">
+  <header class="topbar">
+    <a class="back" href="index.html">← Back</a>
+    <h2>Nighttime — pick an activity</h2>
   </header>
-
-  <div id="scene"></div>
-
-  <div class="audio-ui glass dark">
-    <button id="playBtn">Play</button>
-    <input id="vol" type="range" min="0" max="1" step="0.01" value="0.5"/>
-    <span class="hint">Click Play → ambience loops.</span>
-  </div>
-
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/addons/p5.sound.min.js"></script>
-  <script src="night.js"></script>
+  <main class="grid">
+    <div class="card">
+      <h3>Skate line under stars</h3>
+      <p>Faster lines with a darker mood, starry sky.</p>
+      <a href="night1.html">Open</a>
+    </div>
+    <div class="card">
+      <h3>Live music (busker) + crowd</h3>
+      <p>Pulsing circle around a player, equalizer glow.</p>
+      <a href="night2.html">Open</a>
+    </div>
+    <div class="card">
+      <h3>Hanging out + smoke</h3>
+      <p>Small groups chatting; slow smoke drift.</p>
+      <a href="night3.html">Open</a>
+    </div>
+  </main>
 </body>
 </html>

@@ -3,27 +3,30 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>WSP — Daytime</title>
+  <title>Daytime Activities — WSP</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body class="day">
-  <header class="bar">
-    <a href="index.html" class="back">← Back</a>
-    <h2>Daytime — lively, bright, tourist energy</h2>
+  <header class="topbar">
+    <a class="back" href="index.html">← Back</a>
+    <h2>Daytime — pick an activity</h2>
   </header>
-
-  <div id="scene"></div>
-
-  <!-- simple audio controls (optional) -->
-  <div class="audio-ui glass">
-    <button id="playBtn">Play</button>
-    <input id="vol" type="range" min="0" max="1" step="0.01" value="0.5"/>
-    <span class="hint">Click Play once → ambience loops.</span>
-  </div>
-
-  <!-- p5.js + p5.sound from CDN, then your sketch -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/addons/p5.sound.min.js"></script>
-  <script src="day.js"></script>
+  <main class="grid">
+    <div class="card">
+      <h3>Tourists walking & taking photos</h3>
+      <p>Busy paths, flashes by the arch, casual strolling.</p>
+      <a href="day1.html">Open</a>
+    </div>
+    <div class="card">
+      <h3>Skaters in the square</h3>
+      <p>Casual daytime lines cutting across the plaza.</p>
+      <a href="day2.html">Open</a>
+    </div>
+    <div class="card">
+      <h3>Eating on benches + pigeons</h3>
+      <p>Relaxed groups sharing food, pigeons hovering nearby.</p>
+      <a href="day3.html">Open</a>
+    </div>
+  </main>
 </body>
 </html>
