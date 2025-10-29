@@ -1,0 +1,210 @@
+/* ---------- base variables (DAY by default) ---------- */
+:root {
+    /* Day = white background, dark text */
+    --bg:#ffffff;
+    --fg:#0c0d12;
+    --muted:#5a5f72;
+    --card:#f2f4f7;
+    --line:#e4e7ee;
+  
+    /* Zone visuals (day “lively”) */
+    --hue: 28;       /* lively orange */
+    --glow: 28px;    /* louder halo */
+    --fountain-d: 94px;
+    --paths-d: 67px;
+    --benches-d: 52px;
+    --arch-d: 49px;
+  
+    /* label text for the current mode */
+    --label: "Daytime 2–4 PM • sound 4 • mood: lively";
+  
+    /* scene background */
+    --scene-bg: linear-gradient(#ffffff, #f7f9fc);
+    --grid-tint: rgba(20,24,40,0.08);
+    --arch-fill: #111;           /* dark arch on white day */
+    --ripple-stroke: rgba(0,0,0,0.25);
+  
+    /* star/firefly visibility */
+    --stars-opacity: 0; /* hidden in day */
+  }
+  
+  /* ---------- NIGHT OVERRIDES (when night radio is checked) ---------- */
+  #night:checked ~ .theme {
+    --bg:#000000;
+    --fg:#eaeaf2;
+    --muted:#a3a7b3;
+    --card:#12131a;
+    --line:#20222b;
+  
+    /* Zone visuals (night “chill”) */
+    --hue: 230;      /* indigo blue */
+    --glow: 20px;    /* softer halo */
+    --fountain-d: 58px;
+    --paths-d: 43px;
+    --benches-d: 52px;
+    --arch-d: 43px;
+  
+    --label: "Night 8–10 PM • sound 3 • mood: chill";
+  
+    /* scene background: dark + stars */
+    --scene-bg: radial-gradient(1200px 600px at 50% 0%, #0b0c11, #000000 60%);
+    --grid-tint: rgba(200,210,240,0.12);
+    --arch-fill: #f6f7fb;        /* light arch on black night */
+    --ripple-stroke: rgba(255,255,255,0.25);
+  
+    --stars-opacity: 1; /* show stars */
+  }
+  
+  /* ---------- global layout ---------- */
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--fg);
+    font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+    line-height: 1.45;
+  }
+  header {
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--line);
+    background: var(--bg);
+  }
+  h1 { margin: 0 0 6px; font-size: 20px; }
+  .sub { color: var(--muted); font-size: 13px; }
+  
+  /* toolbar (radio buttons) */
+  .toolbar {
+    display: flex; gap: 8px; padding: 12px 16px;
+    background: var(--card); border-bottom: 1px solid var(--line);
+  }
+  .btn {
+    border: 1px solid var(--line); background: transparent; color: var(--fg);
+    padding: 10px 14px; border-radius: 12px; cursor: pointer;
+  }
+  input[type="radio"] { position: absolute; opacity: 0; }
+  #day:checked + label, #night:checked + label {
+    background: rgba(127,127,127,0.08); border-color: rgba(127,127,127,0.25);
+  }
+  
+  /* main panels */
+  .theme main {
+    display: grid; grid-template-columns: 340px 1fr; gap: 16px; padding: 16px;
+  }
+  .panel {
+    background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 16px;
+  }
+  .legend { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .card { background: transparent; border: 1px dashed var(--line); border-radius: 12px; padding: 10px; }
+  .k { color: var(--muted); font-size: 12px; }
+  .color-legend { margin-top: 6px; display: grid; grid-template-columns: repeat(5,1fr); gap: 6px; }
+  .color-legend div { height: 12px; border-radius: 6px; }
+  .note { color: var(--muted); font-size: 13px; }
+  .label::after { content: var(--label); color: var(--fg); font-size: 14px; }
+  
+  /* ---------- stage & scene ---------- */
+  .stage {
+    position: relative; border: 1px solid var(--line); border-radius: 16px;
+    background: var(--bg); min-height: 560px; overflow: hidden;
+  }
+  
+  /* Scene layer: day sky / night sky with stars */
+  .scene {
+    position: absolute; inset: 0; background: var(--scene-bg); z-index: 0;
+  }
+  
+  /* twinkling stars at night (hidden in day) */
+  .scene::before, .scene::after {
+    content: "";
+    position: absolute; inset: 0;
+    opacity: var(--stars-opacity);
+    background-image:
+      radial-gradient(2px 2px at 20% 30%, rgba(255,255,255,0.8), transparent 60%),
+      radial-gradient(1.5px 1.5px at 60% 20%, rgba(255,255,255,0.8), transparent 60%),
+      radial-gradient(1.8px 1.8px at 80% 40%, rgba(255,255,255,0.8), transparent 60%),
+      radial-gradient(1.4px 1.4px at 35% 70%, rgba(255,255,255,0.7), transparent 60%),
+      radial-gradient(1.6px 1.6px at 75% 75%, rgba(255,255,255,0.7), transparent 60%);
+    animation: twinkle 8s linear infinite;
+  }
+  .scene::after { animation-duration: 10s; mix-blend-mode: screen; }
+  @keyframes twinkle {
+    0%,100%{ opacity: calc(var(--stars-opacity) * 0.9); }
+    50%    { opacity: calc(var(--stars-opacity) * 1.0); }
+  }
+  
+  /* park frame and grid lines */
+  .frame {
+    position: absolute; inset: 24px; border: 2px solid var(--grid-tint); border-radius: 18px; z-index: 1;
+  }
+  .hline, .vline {
+    position: absolute; background: var(--grid-tint); z-index: 1;
+  }
+  .hline { left:24px; right:24px; top:50%; height:1px; }
+  .vline { top:24px; bottom:24px; left:50%; width:1px; }
+  
+  /* stylized ARCH (center-top) */
+  .arch-shape { position: absolute; left: 50%; top: 74px; transform: translateX(-50%); width: 140px; height: 90px; z-index: 2; }
+  .arch-top {
+    position: absolute; left: 0; right: 0; top: 0; height: 34px;
+    background: var(--arch-fill); border-radius: 6px;
+  }
+  .arch-pillar {
+    position: absolute; top: 22px; width: 16px; height: 68px; background: var(--arch-fill); border-radius: 4px;
+  }
+  .arch-pillar.left  { left: 10px; }
+  .arch-pillar.right { right: 10px; }
+  
+  /* fountain ring (basin) */
+  .ring {
+    position: absolute; left: calc(50% - 100px); top: calc(50% - 100px);
+    width: 200px; height: 200px; border-radius: 50%;
+    border: 1px solid var(--grid-tint); z-index: 1;
+  }
+  
+  /* benches band (left side) */
+  .benchband {
+    position: absolute; left: 64px; top: calc(50% - 120px);
+    width: 80px; height: 240px; border-radius: 8px; background: rgba(160,180,255,0.10);
+    z-index: 1;
+  }
+  
+  /* ---------- zones (data-driven visuals via CSS vars) ---------- */
+  .zone {
+    position: absolute; border-radius: 50%;
+    background: hsla(var(--hue), 62%, 52%, .96);
+    box-shadow:
+      0 0 0 1px rgba(0,0,0,0.15),
+      0 0 var(--glow) hsla(var(--hue),70%,60%,.35);
+    display: grid; place-items: center; color: #fff;
+    font-size: 12px; text-align: center; padding: 6px; z-index: 2;
+  }
+  .zone:hover::after {
+    content: attr(data-note);
+    position: absolute; left: 100%; top: 0; margin-left: 12px;
+    min-width: 220px; max-width: 280px; padding: 10px 12px; border-radius: 12px;
+    background: rgba(0,0,0,0.75); color: #fff; border: 1px solid rgba(255,255,255,0.2);
+    box-shadow: 0 10px 30px rgba(0,0,0,.35); font-size: 12px; white-space: normal;
+  }
+  
+  /* zone positions (approximate park layout) */
+  .fountain { left: calc(50% - var(--fountain-d)/2); top: calc(50% - var(--fountain-d)/2); width: var(--fountain-d); height: var(--fountain-d); }
+  .paths    { left: calc(50% - var(--paths-d)/2);    top: calc(50% - var(--paths-d)/2);    width: var(--paths-d);    height: var(--paths-d); }
+  .benches  { left: 84px;                             top: calc(50% - var(--benches-d)/2);  width: var(--benches-d);  height: var(--benches-d); }
+  .arch     { left: calc(50% - var(--arch-d)/2);      top: 96px;                             width: var(--arch-d);     height: var(--arch-d); }
+  
+  /* ---------- fountain ripples (ambient animation) ---------- */
+  .ripples {
+    position: absolute; left: 50%; top: 50%; width: 1px; height: 1px; z-index: 0;
+  }
+  .ripples::before,
+  .ripples::after {
+    content: ""; position: absolute; left: -100px; top: -100px; width: 200px; height: 200px;
+    border-radius: 50%; border: 2px solid var(--ripple-stroke);
+    animation: ripple 4s linear infinite;
+  }
+  .ripples::after { animation-delay: 2s; }
+  @keyframes ripple {
+    0%   { transform: scale(0.75); opacity: .35; }
+    80%  { transform: scale(1.25); opacity: .06; }
+    100% { transform: scale(1.35); opacity: 0; }
+  }
+  

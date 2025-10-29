@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Washington Square Park — Day vs Night</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>
+    <h1>Washington Square Park — Day vs Night (HTML + CSS Only)</h1>
+    <div class="sub">
+      Toggle the vibe. Day is white, Night is black. Circles = zones (size≈crowd, glow≈sound, color≈mood).
+    </div>
+  </header>
+
+  <div class="toolbar">
+    <input type="radio" name="mode" id="day" checked>
+    <label for="day" class="btn">Daytime (2–4 PM)</label>
+
+    <input type="radio" name="mode" id="night">
+    <label for="night" class="btn">Night (8–10 PM)</label>
+  </div>
+
+  <!-- theme container lets CSS variables flow to children -->
+  <div class="theme">
+    <main>
+      <section class="panel">
+        <h3>Legend</h3>
+        <div class="legend">
+          <div class="card">
+            <div class="k">Color (Mood)</div>
+            <div class="color-legend">
+              <div style="background:#5aa1ff" title="calm/peaceful"></div>
+              <div style="background:#7a8bff" title="romantic/chill"></div>
+              <div style="background:#ff9f6a" title="lively"></div>
+              <div style="background:#ff7a59" title="energetic"></div>
+              <div style="background:#ff4d4d" title="excited"></div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="k">Glow (Sound)</div>
+            <p>Higher sound level → brighter halo</p>
+          </div>
+
+          <div class="card">
+            <div class="k">Size (Crowd)</div>
+            <p>More people → larger zone</p>
+          </div>
+
+          <div class="card">
+            <div class="k">Zones</div>
+            <p>Fountain • Paths • Benches • Arch</p>
+          </div>
+        </div>
+
+        <p class="note">Hover a circle to see a short combined note.</p>
+        <p class="label"></p>
+      </section>
+
+      <section class="panel">
+        <div class="stage">
+          <!-- scene background (sky/day; stars/night) -->
+          <div class="scene"></div>
+
+          <!-- park frame/grid -->
+          <div class="frame"></div>
+          <div class="hline"></div>
+          <div class="vline"></div>
+
+          <!-- stylized arch silhouette -->
+          <div class="arch-shape">
+            <div class="arch-top"></div>
+            <div class="arch-pillar left"></div>
+            <div class="arch-pillar right"></div>
+          </div>
+
+          <!-- fountain basin ring -->
+          <div class="ring" aria-hidden="true"></div>
+
+          <!-- benches band to the left -->
+          <div class="benchband" aria-hidden="true"></div>
+
+          <!-- zones (size & color update via CSS vars) -->
+          <div class="zone fountain" data-note="Fountain — central social stage with changing energy.">Fountain</div>
+          <div class="zone paths"    data-note="Paths — movement/through traffic & skaters.">Paths</div>
+          <div class="zone benches"  data-note="Benches — resting, eating, people-watching.">Benches</div>
+          <div class="zone arch"     data-note="Arch — photo spot, meeting point, street music nearby.">Arch</div>
+
+          <!-- fountain ripple animation (CSS only) -->
+          <div class="ripples"></div>
+        </div>
+      </section>
+    </main>
+  </div>
+</body>
+</html>
