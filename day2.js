@@ -1,4 +1,4 @@
-// Day 2 — Skate lines (daytime version of the night skate scene)
+// Day 2 — Skate lines (pure p5, simplified arch, no globalCompositeOperation)
 
 let skaters = [];
 let ramps = [];
@@ -22,7 +22,7 @@ function setup(){
     });
   }
 
-  // daytime ledges
+  // ledges
   ramps = [
     { x: width * 0.30, y: height * 0.66, w: 120, h: 10 },
     { x: width * 0.62, y: height * 0.61, w: 160, h: 12 },
@@ -35,6 +35,7 @@ function windowResized(){
   resizeCanvas(Math.min(window.innerWidth, 900), Math.min(window.innerHeight, 600));
 }
 
+/* ---------- background + park shapes (day style) ---------- */
 function bgGradient(c1, c2){
   noFill();
   for (let y = 0; y < height; y++){
@@ -45,30 +46,30 @@ function bgGradient(c1, c2){
 }
 
 function skyDay(){
-  // soft blue sky → off-white plaza glow
+  // soft sky → plaza glow
   bgGradient(color(200, 225, 255), color(248, 251, 255));
 }
 
-function archDay(){
-  // lighter day palette, simple arch shape + inner cut
+function archDaySimple(){
+  // simplified arch (no compositing) so it works in all setups
   noStroke();
-  fill(225); // arch outer
+  // outer block
+  fill(225);
   rect(width*0.58, height*0.33, width*0.26, height*0.40, 8);
-
-  fill(245); // inner block
+  // inner block
+  fill(245);
   rect(width*0.61, height*0.36, width*0.20, height*0.34, 8);
 
-  // cutout (destination-out)
-  push();
-  drawingContext.save();
-  drawingContext.globalCompositeOperation = 'destination-out';
+  // "cutout" illusion: draw a lighter ellipse to hint the arch opening
+  fill(240);
   ellipse(width*0.71, height*0.57, width*0.16, height*0.28);
-  drawingContext.restore();
-  pop();
 
-  // subtle outline for readability
-  noFill(); stroke(0,0,0,30); strokeWeight(2);
+  // outline for readability
+  noFill(); stroke(0,0,0,35); strokeWeight(2);
   rect(width*0.58, height*0.33, width*0.26, height*0.40, 8);
+  // hint of inner arch edge
+  stroke(0,0,0,25);
+  arc(width*0.71, height*0.57, width*0.16, height*0.28, PI, TWO_PI);
 }
 
 function fountainDay(){
@@ -78,6 +79,7 @@ function fountainDay(){
   fill(140, 180, 230, 90);
   for (let i=0;i<6;i++) ellipse(width*0.40, height*0.68 - i*8, 6, 20);
 }
+/* --------------------------------------------------------- */
 
 function drawRamps(){
   noStroke();
@@ -85,7 +87,7 @@ function drawRamps(){
   for (const r of ramps){
     rect(r.x - r.w/2, r.y - r.h/2, r.w, r.h, 6);
   }
-  // highlight top edges a bit
+  // top highlight
   fill(255,255,255,90);
   for (const r of ramps){
     rect(r.x - r.w/2, r.y - r.h/2 - 2, r.w, 2, 4);
@@ -109,7 +111,7 @@ function drawSkater(x, y, lean = 0){
   fill(40, 40, 55, 180);
   circle(-10, 3, 3); circle(10, 3, 3);
 
-  // figure (dark ink for day)
+  // figure (ink lines for day)
   stroke(30, 35, 50); strokeWeight(2);
   line(0, -18, 0, -4);     // torso
   line(0, -4, -8, 4);      // legs
@@ -123,13 +125,13 @@ function drawSkater(x, y, lean = 0){
 
 function draw(){
   skyDay();
-  archDay();
+  archDaySimple();
   fountainDay();
   drawRamps();
 
-  // skater motion
+  // motion
   for (let s of skaters){
-    // hop when crossing a ramp span
+    // hop over ramps
     let onRamp = false;
     for (const r of ramps){
       if (s.x > r.x - r.w/2 - 12 && s.x < r.x + r.w/2 + 12) { onRamp = true; break; }

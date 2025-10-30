@@ -1,15 +1,25 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Day 2 — Skaters in the Square</title>
-<link rel="stylesheet" href="style.css"/>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Day 2 — Skate lines</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body class="day">
-  <header class="topbar"><a class="back" href="day.html">← Daytime</a><h2>Skaters in the square</h2></header>
-  <div id="scene" class="scene"></div>
+  <header class="topbar">
+    <a class="back" href="day.html">← Back</a>
+    <h2 style="margin:0">Day 2 — Skate lines</h2>
+  </header>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
+  <main class="scene">
+    <!-- THIS id MUST be "sketch" -->
+    <div id="sketch"></div>
+  </main>
+
+  <!-- Load p5 FIRST -->
+  <script src="https://cdn.jsdelivr.net/npm/p5@1.9.3/lib/p5.min.js"></script>
+  <!-- Then your sketch -->
   <script src="day2.js"></script>
 </body>
 </html>
