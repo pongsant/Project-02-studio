@@ -1,41 +1,160 @@
+// Day 2 — Skate lines (daytime version of the night skate scene)
+
 let skaters = [];
 let ramps = [];
 
 function setup(){
-  const c = createCanvas(windowWidth, windowHeight - 64);
-  c.parent('scene'); colorMode(RGB,255);
-  for(let i=0;i<6;i++){ skaters.push({x: random(-200,-40), y: random(height*0.55,height*0.7), spd: random(2.2,3.1)}); }
+  const w = Math.min(window.innerWidth, 900);
+  const h = Math.min(window.innerHeight, 600);
+  const c = createCanvas(w, h);
+  c.parent('sketch');
+
+  // skaters
+  for (let i = 0; i < 7; i++) {
+    const base = random(height * 0.56, height * 0.70);
+    skaters.push({
+      x: random(-240, -80),
+      y: base,
+      baseY: base,
+      spd: random(2.0, 2.8),
+      vy: 0,
+      phase: random(TWO_PI),
+    });
+  }
+
+  // daytime ledges
   ramps = [
-    {x: width*0.3, y: height*0.65, w: 80, h: 10},
-    {x: width*0.6, y: height*0.6, w: 120, h: 12}
+    { x: width * 0.30, y: height * 0.66, w: 120, h: 10 },
+    { x: width * 0.62, y: height * 0.61, w: 160, h: 12 },
   ];
+
+  textFont('system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial');
+}
+
+function windowResized(){
+  resizeCanvas(Math.min(window.innerWidth, 900), Math.min(window.innerHeight, 600));
+}
+
+function bgGradient(c1, c2){
+  noFill();
+  for (let y = 0; y < height; y++){
+    const t = y / height;
+    stroke(lerpColor(c1, c2, t));
+    line(0, y, width, y);
+  }
+}
+
+function skyDay(){
+  // soft blue sky → off-white plaza glow
+  bgGradient(color(200, 225, 255), color(248, 251, 255));
+}
+
+function archDay(){
+  // lighter day palette, simple arch shape + inner cut
+  noStroke();
+  fill(225); // arch outer
+  rect(width*0.58, height*0.33, width*0.26, height*0.40, 8);
+
+  fill(245); // inner block
+  rect(width*0.61, height*0.36, width*0.20, height*0.34, 8);
+
+  // cutout (destination-out)
+  push();
+  drawingContext.save();
+  drawingContext.globalCompositeOperation = 'destination-out';
+  ellipse(width*0.71, height*0.57, width*0.16, height*0.28);
+  drawingContext.restore();
+  pop();
+
+  // subtle outline for readability
+  noFill(); stroke(0,0,0,30); strokeWeight(2);
+  rect(width*0.58, height*0.33, width*0.26, height*0.40, 8);
+}
+
+function fountainDay(){
+  noStroke();
+  fill(180, 205, 235, 150);
+  ellipse(width*0.40, height*0.76, width*0.32, height*0.06);
+  fill(140, 180, 230, 90);
+  for (let i=0;i<6;i++) ellipse(width*0.40, height*0.68 - i*8, 6, 20);
+}
+
+function drawRamps(){
+  noStroke();
+  fill(60, 60, 80, 35); // plaza shadow tone
+  for (const r of ramps){
+    rect(r.x - r.w/2, r.y - r.h/2, r.w, r.h, 6);
+  }
+  // highlight top edges a bit
+  fill(255,255,255,90);
+  for (const r of ramps){
+    rect(r.x - r.w/2, r.y - r.h/2 - 2, r.w, 2, 4);
+  }
+}
+
+function drawSkater(x, y, lean = 0){
+  push();
+  translate(x, y);
+  rotate(lean);
+
+  // board shadow
+  noStroke(); fill(0,0,0,60);
+  ellipse(4, 8, 26, 6);
+
+  // board (day tint)
+  fill(40, 40, 55, 140);
+  rectMode(CENTER); rect(0, 0, 28, 4, 2);
+
+  // wheels
+  fill(40, 40, 55, 180);
+  circle(-10, 3, 3); circle(10, 3, 3);
+
+  // figure (dark ink for day)
+  stroke(30, 35, 50); strokeWeight(2);
+  line(0, -18, 0, -4);     // torso
+  line(0, -4, -8, 4);      // legs
+  line(0, -4,  8, 4);
+  line(0, -14, -10, -8);   // arms
+  line(0, -14,  10, -8);
+  noStroke(); fill(30,35,50);
+  circle(0, -22, 8);       // head
+  pop();
 }
 
 function draw(){
-  bgGradient(color(255), color(230,240,255));
-  drawArch(false);
+  skyDay();
+  archDay();
+  fountainDay();
+  drawRamps();
 
-  // ramps
-  noStroke(); fill(0,0,0,30);
-  for (let r of ramps){ rect(r.x - r.w/2, r.y - r.h/2, r.w, r.h, 6); }
-
-  // skaters
-  textAlign(CENTER,CENTER); textSize(26);
-  for(let s of skaters){
-    // tiny hop when near ramp
-    let hop = 0;
-    for (let r of ramps){
-      if (s.x > r.x - r.w/2 - 15 && s.x < r.x + r.w/2 + 15) hop = -10;
+  // skater motion
+  for (let s of skaters){
+    // hop when crossing a ramp span
+    let onRamp = false;
+    for (const r of ramps){
+      if (s.x > r.x - r.w/2 - 12 && s.x < r.x + r.w/2 + 12) { onRamp = true; break; }
     }
-    s.x += s.spd; s.y += lerp(0, hop, 0.08);
-    text('🛹', s.x, s.y);
-    if(s.x > width+60){ s.x = random(-220,-60); s.y = random(height*0.55,height*0.7); }
+    if (onRamp && s.vy >= 0) s.vy = -2.3;  // takeoff
+    s.vy += 0.10;                           // gravity
+    s.y = s.baseY + s.vy;
+
+    // forward + gentle lean
+    s.x += s.spd;
+    const lean = sin(frameCount * 0.06 + s.phase) * 0.12;
+
+    drawSkater(s.x, s.y, lean);
+
+    // recycle
+    if (s.x > width + 80){
+      s.x = random(-260, -100);
+      s.baseY = random(height * 0.56, height * 0.70);
+      s.y = s.baseY;
+      s.vy = 0;
+    }
   }
 
-  caption("Daytime: casual skate lines crossing the plaza.");
+  // label
+  noStroke(); fill(20);
+  textSize(14);
+  text('Day 2 • Skate lines across the plaza', 12, 24);
 }
-
-// helpers
-function bgGradient(c1,c2){ for(let y=0;y<height;y++){ const t=y/height; stroke(lerpColor(c1,c2,t)); line(0,y,width,y);} }
-function drawArch(light=false){ push(); const y=height*0.2,x=width*0.5; noStroke(); rectMode(CENTER); fill(light?255:20); rect(x,y,180,40,8); rect(x-180/2+14,y+100/2,20,100,6); rect(x+180/2-14,y+100/2,20,100,6); pop(); }
-function caption(msg){ push(); noStroke(); fill(255,255,255,220); rect(16,16,360,64,12); fill(10); textAlign(LEFT,TOP); textSize(14); text(msg, 28,24); pop(); }
