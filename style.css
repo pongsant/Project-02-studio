@@ -249,4 +249,23 @@
   @media (prefers-reduced-motion: reduce){
     *{ transition: none !important; animation: none !important; }
   }
-  
+  /* Make night cards perfect squares with same rounded corners/shadow */
+.card--square{
+  aspect-ratio: 1 / 1;          /* square */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.card--square h3{
+  margin-bottom: 8px;
+}
+
+.card--square p{
+  margin-bottom: 12px;
+}
+
+/* Optional: keep buttons anchored at bottom nicely */
+.card--square a{
+  align-self: start;
+}
